@@ -65,5 +65,111 @@ namespace HotelBooking.UnitTests
             Assert.Empty(bookingForReturnedRoomId);
         }
 
+        // #1
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartAndEndInPast()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(-5);
+            DateTime endDate = DateTime.Today.AddDays(-1);
+
+            // Act
+            Action act = () => bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.Throws<ArgumentException>(act);
+        }
+
+        // #2
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartInPast()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(-1);
+            DateTime endDate = DateTime.Today.AddDays(5);
+            // Act
+            Action act = () => bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.Throws<ArgumentException>(act);
+        }
+
+        // #3
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_NotFullyBooked()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(1);
+            DateTime endDate = DateTime.Today.AddDays(5);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.NotEqual(-1, roomId);
+        }
+
+        // #4
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartBeforeEndAfterFullyBooked()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(8);
+            DateTime endDate = DateTime.Today.AddDays(22);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.Equal(-1, roomId);
+        }
+
+        // #5
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartAndEndAfterFullyBooked()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(22);
+            DateTime endDate = DateTime.Today.AddDays(26);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.NotEqual(-1, roomId);
+        }
+
+        // #6
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartBeforeEndDuringFullyBooked()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(8);
+            DateTime endDate = DateTime.Today.AddDays(15);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.Equal(-1, roomId);
+        }
+
+        // #7
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartAndEndDuringFullyBooked()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(11);
+            DateTime endDate = DateTime.Today.AddDays(15);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.Equal(-1, roomId);
+        }
+
+        // #8
+        [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartDuringEndAfterFullyBooked()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(15);
+            DateTime endDate = DateTime.Today.AddDays(22);
+            // Act
+            int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
+            // Assert
+            Assert.Equal(-1, roomId);
+        }
+
+
     }
 }
