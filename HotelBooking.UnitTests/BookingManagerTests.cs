@@ -24,6 +24,7 @@ namespace HotelBooking.UnitTests
         public void FindAvailableRoom_StartDateNotInTheFuture_ThrowsArgumentException()
         {
             // Arrange
+            // lkjfd
             DateTime date = DateTime.Today;
 
             // Act
@@ -65,17 +66,21 @@ namespace HotelBooking.UnitTests
             Assert.Empty(bookingForReturnedRoomId);
         }
 
-        // #1
+        // #1 This unit test is checking the behavior of the FindAvailableRoom method
+        // when the start date is in the past and the end date is also in the past.
         [Fact]
         public void FindAvailableRoom_RoomAvailable_StartAndEndInPast()
         {
             // Arrange
-            DateTime startDate = DateTime.Today.AddDays(-5);
-            DateTime endDate = DateTime.Today.AddDays(-1);
+            DateTime startDate = DateTime.Today.AddDays(-5);  // Set a start date 5 days in the past.
+            DateTime endDate = DateTime.Today.AddDays(-1);  // Set an end date 1 day in the past.
 
-            // Act
+            // Act: Call the FindAvailableRoom method with the specified start and end dates
+            // and capture any exception that might be thrown during this action.
             Action act = () => bookingManager.FindAvailableRoom(startDate, endDate);
+
             // Assert
+            // We expect that calling FindAvailableRoom with invalid input dates will throw an ArgumentException.
             Assert.Throws<ArgumentException>(act);
         }
 
