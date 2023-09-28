@@ -17,6 +17,7 @@ namespace HotelBooking.UnitTests
             bookingManager = new BookingManager(bookingRepository, roomRepository);
         }
 
+
         [Fact]
         public void FindAvailableRoom_StartDateNotInTheFuture_ThrowsArgumentException()
         {
@@ -25,6 +26,21 @@ namespace HotelBooking.UnitTests
 
             // Act
             Action act = () => bookingManager.FindAvailableRoom(date, date);
+
+            // Assert
+            Assert.Throws<ArgumentException>(act);
+        }
+
+        [Fact]
+        public void FindAvailableRoom_StartDateBeforeCurrentDate_ThrowsArgumentException()
+        {
+            // Arrange
+            DateTime date = DateTime.Today.AddDays(-5);
+            DateTime EndDate = DateTime.Today.AddDays(-2);
+
+
+            // Act
+            Action act = () => bookingManager.FindAvailableRoom(date, EndDate);
 
             // Assert
             Assert.Throws<ArgumentException>(act);
@@ -118,7 +134,7 @@ namespace HotelBooking.UnitTests
         }
 
         [Fact]
-        public void FindAvailbleRoom_EndDateBeforeStartDAte_ThrowsArgumentExpection()
+        public void FindAvailbleRoom_EndDateBeforeStartDate_ThrowsArgumentExpection()
         {
             // Arrange
             DateTime date = DateTime.Today.AddDays(8);
