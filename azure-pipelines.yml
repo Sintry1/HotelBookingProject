@@ -8,6 +8,7 @@ trigger:
 - DomUnitTests
 - jesperUnitTest
 - Zia
+- Sam
 
 pool:
   vmImage: 'ubuntu-latest'
