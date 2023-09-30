@@ -68,7 +68,7 @@ namespace HotelBooking.UnitTests
             Assert.Equal("A", result[0].Description);
 
             // Moq verification - Verify that method was called
-            fakeRoomRepository.Verify(x => x.GetAll(It.IsAny<List>()));
+            fakeRoomRepository.Verify(x => x.GetAll());
         }
 
         [Fact]
