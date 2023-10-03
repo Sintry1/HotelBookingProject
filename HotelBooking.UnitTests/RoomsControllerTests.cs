@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using HotelBooking.Core;
 using HotelBooking.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +62,13 @@ namespace HotelBooking.UnitTests
 
             // Assert
             Assert.Equal(2, noOfRooms);
+
+            // Check if the first room's ID is 1 and Description is "A"
+            Assert.Equal(1, result[0].Id);
+            Assert.Equal("A", result[0].Description);
+
+            // Moq verification - Verify that method was called
+            fakeRoomRepository.Verify(x => x.GetAll());
         }
 
         [Fact]
