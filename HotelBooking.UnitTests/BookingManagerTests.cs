@@ -3,6 +3,9 @@ using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
 using Xunit;
 using System.Linq;
+using Moq;
+using System.Collections.Generic;
+
 
 
 namespace HotelBooking.UnitTests
@@ -11,6 +14,8 @@ namespace HotelBooking.UnitTests
     {
         private IBookingManager bookingManager;
         IRepository<Booking> bookingRepository;
+        private Mock<IRepository<Booking>> bookingRepositoryMock;
+        private Mock<IRepository<Room>> roomRepositoryMock;
 
         public BookingManagerTests(){
             DateTime start = DateTime.Today.AddDays(10);
@@ -18,13 +23,14 @@ namespace HotelBooking.UnitTests
             bookingRepository = new FakeBookingRepository(start, end);
             IRepository<Room> roomRepository = new FakeRoomRepository();
             bookingManager = new BookingManager(bookingRepository, roomRepository);
+            bookingRepositoryMock = new Mock<IRepository<Booking>>();
+            roomRepositoryMock = new Mock<IRepository<Room>>();
         }
 
         [Fact]
         public void FindAvailableRoom_StartDateNotInTheFuture_ThrowsArgumentException()
         {
             // Arrange
-            // lkjfd
             DateTime date = DateTime.Today;
 
             // Act
@@ -213,8 +219,29 @@ namespace HotelBooking.UnitTests
             Assert.Equal(-1, roomId);
         }
 
-        // Putting a comment here so I have something to commit and check the Azure Pipelines is working
-        // Putting another comment here to test pipeline
+
+        [Fact]
+        public void CreateBooking_CallOnce_ReturnTrue()
+        {
+            // Arrange
+            var rooms = new List<Room>{new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" }, new Room { Id = 3, Description = "presidential suite" },};
+            var bookingManager = new BookingManager(bookingRepositoryMock.Object, roomRepositoryMock.Object);
+            var booking = new Booking { StartDate = DateTime.Today.AddDays(2), EndDate = DateTime.Now.AddDays(4) };
+
+            // Set up an expectation for the Add method of bookingRepositoryMock
+            roomRepositoryMock.Setup(repo => repo.GetAll()).Returns(rooms);
+            bookingRepositoryMock.Setup(repo => repo.Add(It.IsAny<Booking>()));
+
+            // Act
+            bool result = bookingManager.CreateBooking(booking);
+
+            // Assert
+            // You can assert that the Add method was called with the expected parameters
+            bookingRepositoryMock.Verify(repo => repo.Add(booking), Times.Once());
+            Assert.True(result);
+        }
+
 
     }
+
 }
