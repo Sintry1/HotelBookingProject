@@ -221,7 +221,7 @@ namespace HotelBooking.UnitTests
 
 
         [Fact]
-        public void CreateBooking_CallOnce_ReturnTrue()
+        public void CreateBooking_CallOnce_And_ReturnTrue()
         {
             // Arrange
             var rooms = new List<Room>{new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" }};
@@ -236,13 +236,12 @@ namespace HotelBooking.UnitTests
             bool result = bookingManager.CreateBooking(booking);
 
             // Assert
-            // You can assert that the Add method was called with the expected parameters
             bookingRepositoryMock.Verify(repo => repo.Add(booking), Times.Once());
             Assert.True(result);
         }
 
         [Fact]
-        public void GetGetFullyOccupiedDates_Return5FullyOccupiedDates()
+        public void GetFullyOccupiedDates_Return5FullyOccupiedDates()
         {
             // Arrange
             var bookingManager = new BookingManager(bookingRepositoryMock.Object, roomRepositoryMock.Object);
@@ -251,10 +250,10 @@ namespace HotelBooking.UnitTests
             // Set up the booking repository mock to return bookings when GetAll is called
             var bookings = new List<Booking>
             {
-                new Booking { Id = 1, StartDate = DateTime.Now.AddDays(1), EndDate = DateTime.Now.AddDays(4), IsActive = true, RoomId = 1, CustomerId = 1 },
-                new Booking { Id = 2, StartDate = DateTime.Now.AddDays(1), EndDate = DateTime.Now.AddDays(4), IsActive = true, RoomId = 2, CustomerId = 2 },
-                new Booking { Id = 1, StartDate = DateTime.Now.AddDays(5), EndDate = DateTime.Now.AddDays(7), IsActive = true, RoomId = 1, CustomerId = 1 },
-                new Booking { Id = 2, StartDate = DateTime.Now.AddDays(5), EndDate = DateTime.Now.AddDays(7), IsActive = true, RoomId = 2, CustomerId = 2 },
+                new Booking { Id = 1, StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(4), IsActive = true, RoomId = 1, CustomerId = 1 },
+                new Booking { Id = 2, StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Now.AddDays(4), IsActive = true, RoomId = 2, CustomerId = 2 },
+                new Booking { Id = 1, StartDate = DateTime.Today.AddDays(5), EndDate = DateTime.Now.AddDays(7), IsActive = true, RoomId = 1, CustomerId = 1 },
+                new Booking { Id = 2, StartDate = DateTime.Today.AddDays(5), EndDate = DateTime.Now.AddDays(9), IsActive = true, RoomId = 2, CustomerId = 2 },
             };
             bookingRepositoryMock.Setup(repo => repo.GetAll()).Returns(bookings);
 
@@ -270,6 +269,7 @@ namespace HotelBooking.UnitTests
             var fullyOccupiedDates = bookingManager.GetFullyOccupiedDates(DateTime.Now, DateTime.Now.AddDays(10));
 
             // Assert
+            //Asserts that it's a collections of dates that matches the dates we added to the booking
             Assert.Collection(fullyOccupiedDates,
                 date => Assert.Equal(DateTime.Today.AddDays(1).Date, date.Date),
                 date => Assert.Equal(DateTime.Today.AddDays(2).Date, date.Date),
@@ -279,8 +279,41 @@ namespace HotelBooking.UnitTests
             );
             //it only returns 5 dates even tho it looks like there should be 7, due to how bookings work
             //books don't count the day of the END date, so it's technically only days 1-3 and 5-6
+            //Today + 7 and 8 aren't counted, as it's only one, of the two rooms, that is booked
         }
 
+        [Fact]
+        public void FindAvailableRooms_returnRoomIdOfFirstAvailableRoom()
+        {
+            // Arrange
+            var bookingManager = new BookingManager(bookingRepositoryMock.Object, roomRepositoryMock.Object);
+            bookingRepositoryMock.Setup(repo => repo.Add(It.IsAny<Booking>()));
+
+            // Set up the booking repository mock to return bookings when GetAll is called
+            var bookings = new List<Booking>
+            {
+                new Booking { Id = 1, StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(4), IsActive = true, RoomId = 1, CustomerId = 1 },
+            };
+            bookingRepositoryMock.Setup(repo => repo.GetAll()).Returns(bookings);
+
+            // Set up the room repository mock to return rooms when GetAll is called
+            var rooms = new List<Room>
+            {
+                new Room { Id = 1, Description = "Single Room" },
+                new Room { Id = 2, Description = "Double Room" },
+                new Room { Id = 3, Description = "Double Room" },
+            };
+            roomRepositoryMock.Setup(repo => repo.GetAll()).Returns(rooms.AsQueryable());
+
+            // Act
+            var availableRooms = bookingManager.FindAvailableRoom(DateTime.Today.AddDays(2), DateTime.Today.AddDays(10));
+
+            // Assert
+            Assert.Equal(2, availableRooms);
+            //This is slightly weird, as you would expect a list of rooms or something, since there are two available rooms in the mock repository
+            //But GetAvailableRooms only returns the first available room that it finds
+            // it's expected based on the code, but seems like a major oversight for the hotel and customers
+        }
     }
 
 }
