@@ -233,9 +233,11 @@ namespace HotelBooking.UnitTests
             bookingRepositoryMock.Setup(repo => repo.Add(It.IsAny<Booking>()));
 
             // Act
+            // Will return true if the booking is created, false otherwise
             bool result = bookingManager.CreateBooking(booking);
 
             // Assert
+            // Verifies that the Add method is called once and only once
             bookingRepositoryMock.Verify(repo => repo.Add(booking), Times.Once());
             Assert.True(result);
         }
