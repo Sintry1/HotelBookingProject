@@ -314,6 +314,61 @@ namespace HotelBooking.UnitTests
             //But GetAvailableRooms only returns the first available room that it finds
             // it's expected based on the code, but seems like a major oversight for the hotel and customers
         }
+
+            [Fact]
+        public void FindAvailableRoom_RoomAvailable_StartDuringEndAfterFullyBooked2()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(15);  // Set a start date 15 days in the future.
+            DateTime endDate = DateTime.Today.AddDays(22);   // Set an end date 22 days in the future.
+
+            // Mock the behavior of bookingRepository to return a list of fully booked rooms during the specified date range
+            bookingRepositoryMock.Setup(repo => repo.GetAll()).Returns(new List<Booking>
+            {
+                // Include bookings that fully occupy the specified date range
+                new Booking { Id = 1, StartDate = DateTime.Today.AddDays(10), EndDate = DateTime.Today.AddDays(20), IsActive = true, RoomId = 1, CustomerId = 1 },
+                new Booking { Id = 2, StartDate = DateTime.Today.AddDays(12), EndDate = DateTime.Today.AddDays(18), IsActive = true, RoomId = 2, CustomerId = 2 },
+            });
+
+            // Mock the behavior of roomRepository to return a list of all available rooms
+            roomRepositoryMock.Setup(repo => repo.GetAll()).Returns(new List<Room>
+            {
+                new Room { Id = 1, Description = "Single Room" },
+                new Room { Id = 2, Description = "Double Room" },
+                new Room { Id = 3, Description = "Double Room" },
+            });
+
+            // Act: Call the FindAvailableRoom method with a start date within a fully booked date range
+            // and an end date in the future, and retrieve the room ID assigned to the available room (if any).
+            int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
+
+            // Assert
+            // We expect that -1 will be returned, indicating that no available rooms exist within the specified date range.
+            Assert.Equal(-1, roomId);
+        }
+
+            [Fact]
+        public void CreateBooking_CallAddMethodWithCorrectBooking()
+        {
+            // Arrange
+            var rooms = new List<Room> { new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" }};
+            var booking = new Booking { StartDate = DateTime.Today.AddDays(2), EndDate = DateTime.Now.AddDays(4) };
+
+            // Mock the behavior of roomRepository to return a list of available rooms
+            roomRepositoryMock.Setup(repo => repo.GetAll()).Returns(rooms);
+
+            // Set up an expectation for the Add method of bookingRepositoryMock
+            bookingRepositoryMock.Setup(repo => repo.Add(It.IsAny<Booking>()));
+
+            // Act
+            bool result = bookingManager.CreateBooking(booking);
+
+            // Assert
+            // Verify that the Add method of bookingRepositoryMock was called once with the correct booking object
+            bookingRepositoryMock.Verify(repo => repo.Add(booking), Times.Once());
+            Assert.True(result);
+        }
+
     }
 
 }
