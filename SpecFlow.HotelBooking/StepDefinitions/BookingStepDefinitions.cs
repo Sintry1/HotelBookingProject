@@ -1,11 +1,25 @@
+using HotelBooking.Core;
+using Moq;
 using System;
 using TechTalk.SpecFlow;
 
-namespace Specflow.Booking.StepDefinitions
+namespace HotelBooking.Specflow.Booking.StepDefinitions
 {
     [Binding]
     public class BookingStepDefinitions
     {
+        DateTime startDate, endDate;
+        DateTime[] occupiedDates = new DateTime[]
+        {
+            new DateTime(2023,11,25),
+            new DateTime(2023,11,30),
+        };
+
+        IRepository<Booking> bookingRepository;
+        private Mock<IRepository<Booking>> bookingRepositoryMock;
+        private Mock<IRepository<Room>> roomRepositoryMock;
+        private IBookingManager bookingmanager = new BookingManager();
+
         private ScenarioContext scenarioContext;
 
         [Given(@"occupiedRange")]
@@ -15,21 +29,21 @@ namespace Specflow.Booking.StepDefinitions
         }
 
         [Given(@"I have input a startDate before Occupied Range")]
-        public void GivenIHaveInputAStartDateBeforeOccupiedRange(DateTime startDate)
+        public void GivenIHaveInputAStartDateBeforeOccupiedRange(DateTime bookingStartDate)
         {
-            throw new PendingStepException();
+            startDate = bookingStartDate;
         }
 
         [Given(@"I have input a endDate before Occupied Range")]
-        public void GivenIHaveInputAEndDateBeforeOccupiedRange(DateTime endDate)
+        public void GivenIHaveInputAEndDateBeforeOccupiedRange(DateTime bookingEndDate)
         {
-            throw new PendingStepException();
+            endDate = bookingEndDate;
         }
 
         [When(@"I attempt booking before occupied range")]
         public void WhenIAttemptBookingBeforeOccupiedRange()
         {
-            throw new PendingStepException();
+            
         }
 
         [Then(@"A booking is made before occupied range")]
