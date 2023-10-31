@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <SpecFlowFeatureFiles Remove="Features\Booking.feature" />
+    <SpecFlowFeatureFiles Remove="Features\SpecFlowBookingManager.feature" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Features\Booking.feature" />
+    <None Include="Features\SpecFlowBookingManager.feature" />
   </ItemGroup>
 
   <ItemGroup>
