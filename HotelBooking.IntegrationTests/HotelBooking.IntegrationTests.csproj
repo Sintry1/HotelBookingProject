@@ -27,6 +27,5 @@
   <ItemGroup>
     <ProjectReference Include="..\HotelBooking.Core\HotelBooking.Core.csproj" />
     <ProjectReference Include="..\HotelBooking.Infrastructure\HotelBooking.Infrastructure.csproj" />
-    <ProjectReference Include="..\SpecFlowProject1\Specflow.Booking.csproj" />
   </ItemGroup>
 </Project>
