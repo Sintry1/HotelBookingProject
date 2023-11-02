@@ -9,46 +9,43 @@ namespace SpecFlow.HotelBooking.StepDefinitions
     public class BookingStepDefinitions
     {
 
-        [Given(@"occupiedRange")]
-        public void GivenOccupiedRange()
+        private IBookingManager bookingManager;
+        IRepository<Booking> bookingRepository;
+        private DateTime startDate, endDate;
+        private int roomID;
+
+        [Given(@"I have a repository of booked dates")]
+        public void GivenIHaveARepositoryOfBookedDates()
         {
-            throw new PendingStepException();
+            DateTime start = DateTime.Today.AddDays(10);
+            DateTime end = DateTime.Today.AddDays(20);
+            bookingRepository = new FakeBookingRepository(start, end);
+            IRepository<Room> roomRepository = new FakeRoomRepository();
+            bookingManager = new BookingManager(bookingRepository, roomRepository);
         }
 
-        [Given(@"I have a booking request with the following details")]
-        public void GivenIHaveABookingRequestWithTheFollowingDetails(Table table)
+        [Given(@"I have entered a start date in (.*)")]
+        public void GivenIHaveEnteredAStartDateIn(int p0)
         {
-            throw new PendingStepException();
+            startDate = DateTime.Today.AddDays(p0);
         }
 
-        [When(@"I attempt booking before occupied range")]
-        public void WhenIAttemptBookingBeforeOccupiedRange()
+        [Given(@"I have entered an end date in (.*)")]
+        public void GivenIHaveEnteredAnEndDateIn(int p0)
         {
-            throw new PendingStepException();
+            endDate = DateTime.Today.AddDays(p0);
         }
 
-        [Then(@"Booking True")]
-        public void ThenBookingTrue()
+        [When(@"I press Create New Booking")]
+        public void WhenIPressCreateNewBooking()
         {
-            throw new PendingStepException();
+            roomID = bookingManager.FindAvailableRoom(startDate, endDate);
         }
 
-        [When(@"I attempt booking after occupied range")]
-        public void WhenIAttemptBookingAfterOccupiedRange()
+        [Then(@"The result should be (.*)")]
+        public void ThenTheResultShouldBe(int expectedReturn)
         {
-            throw new PendingStepException();
-        }
-
-        [When(@"I attempt booking during occupied range")]
-        public void WhenIAttemptBookingDuringOccupiedRange()
-        {
-            throw new PendingStepException();
-        }
-
-        [Then(@"Booking False")]
-        public void ThenBookingFalse()
-        {
-            throw new PendingStepException();
+            Assert.Equal(expectedReturn, roomID);
         }
     }
 }

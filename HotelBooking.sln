@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelBooking.Mvc", "HotelBo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelBooking.WebApi", "HotelBooking.WebApi\HotelBooking.WebApi.csproj", "{2A98B98E-16D8-4F8D-A2D2-E4C4377CBB30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecFlow.HotelBooking", "SpecFlow.HotelBooking\SpecFlow.HotelBooking.csproj", "{1E9218BF-3707-4F83-9EE2-4F6DBA0AE601}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecFlow.HotelBooking", "SpecFlow.HotelBooking\SpecFlow.HotelBooking.csproj", "{1E9218BF-3707-4F83-9EE2-4F6DBA0AE601}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Drivers\" />
+    <Folder Include="Fakes\" />
     <Folder Include="Support\" />
   </ItemGroup>
 

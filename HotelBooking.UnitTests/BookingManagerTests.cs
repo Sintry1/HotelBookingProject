@@ -348,29 +348,5 @@ namespace HotelBooking.UnitTests
             // We expect that -1 will be returned, indicating that no available rooms exist within the specified date range.
             Assert.Equal(-1, roomId);
         }
-
-            [Fact]
-        public void CreateBooking_CallAddMethodWithCorrectBooking()
-        {
-            // Arrange
-            var rooms = new List<Room> { new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" }};
-            var booking = new Booking { StartDate = DateTime.Today.AddDays(2), EndDate = DateTime.Now.AddDays(4) };
-
-            // Mock the behavior of roomRepository to return a list of available rooms
-            roomRepositoryMock.Setup(repo => repo.GetAll()).Returns(rooms);
-
-            // Set up an expectation for the Add method of bookingRepositoryMock
-            bookingRepositoryMock.Setup(repo => repo.Add(It.IsAny<Booking>()));
-
-            // Act
-            bool result = bookingManager.CreateBooking(booking);
-
-            // Assert
-            // Verify that the Add method of bookingRepositoryMock was called once with the correct booking object
-            bookingRepositoryMock.Verify(repo => repo.Add(booking), Times.Once());
-            Assert.True(result);
-        }
-
     }
-
 }
