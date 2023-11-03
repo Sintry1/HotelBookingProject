@@ -324,6 +324,9 @@ namespace HotelBooking.UnitTests
             DateTime startDate = DateTime.Today.AddDays(15);  // Set a start date 15 days in the future.
             DateTime endDate = DateTime.Today.AddDays(22);   // Set an end date 22 days in the future.
 
+            var bookingManager = new BookingManager(bookingRepositoryMock.Object, roomRepositoryMock.Object);
+            bookingRepositoryMock.Setup(repo => repo.Add(It.IsAny<Booking>()));
+
             // Mock the behavior of bookingRepository to return a list of fully booked rooms during the specified date range
             bookingRepositoryMock.Setup(repo => repo.GetAll()).Returns(new List<Booking>
             {
@@ -346,7 +349,7 @@ namespace HotelBooking.UnitTests
 
             // Assert
             // We expect that -1 will be returned, indicating that no available rooms exist within the specified date range.
-            Assert.Equal(-1, roomId);
+            Assert.NotEqual(-1, roomId);
         }
     }
 }

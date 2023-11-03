@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using HotelBooking.Core;
 
-namespace SpecFlow.HotelBooking.StepDefinitions
+namespace SpecFlow.HotelBooking.Support
 {
     public class FakeBookingRepository : IRepository<Booking>
     {

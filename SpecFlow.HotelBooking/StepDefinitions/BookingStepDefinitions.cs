@@ -2,6 +2,7 @@ using HotelBooking.Core;
 using Moq;
 using System;
 using TechTalk.SpecFlow;
+using SpecFlow.HotelBooking.Support;
 
 namespace SpecFlow.HotelBooking.StepDefinitions
 {
@@ -23,6 +24,7 @@ namespace SpecFlow.HotelBooking.StepDefinitions
             IRepository<Room> roomRepository = new FakeRoomRepository();
             bookingManager = new BookingManager(bookingRepository, roomRepository);
         }
+
 
         [Given(@"I have entered a start date in (.*)")]
         public void GivenIHaveEnteredAStartDateIn(int p0)
