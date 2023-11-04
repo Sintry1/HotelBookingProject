@@ -16,13 +16,13 @@ Scenario Outline: Create a booking
 
     	Examples:
 	| startDate | endDate | return |
-	| 2         | 5       | 1      |
-	| 21        | 24      | 1      |
-	| 9         | 21      | -1     |
-	| 6         | 10      | -1     |
-	| 6         | 15      | -1     |
-	| 15        | 21      | -1     |
-	| 20        | 24      | -1     |
-	| 10        | 15      | -1     |
-	| 10        | 20      | -1     |
-	| 14        | 20      | -1     |
+	| 2         | 5       | true      |
+	| 21        | 24      |true     |
+	| 9         | 21      |false    |
+	| 6         | 10      |false    |
+	| 6         | 15      |false    |
+	| 15        | 21      |false    |
+	| 20        | 24      |false    |
+	| 10        | 15      |false    |
+	| 10        | 20      |false    |
+	| 14        | 20      |false    |

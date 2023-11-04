@@ -12,8 +12,8 @@ namespace SpecFlow.HotelBooking.StepDefinitions
 
         private IBookingManager bookingManager;
         IRepository<Booking> bookingRepository;
-        private DateTime startDate, endDate;
-        private int roomID;
+        private Booking booking = new Booking();
+        private bool canBook;
 
         [Given(@"I have a repository of booked dates")]
         public void GivenIHaveARepositoryOfBookedDates()
@@ -29,25 +29,25 @@ namespace SpecFlow.HotelBooking.StepDefinitions
         [Given(@"I have entered a start date in (.*)")]
         public void GivenIHaveEnteredAStartDateIn(int p0)
         {
-            startDate = DateTime.Today.AddDays(p0);
+            booking.StartDate = DateTime.Today.AddDays(p0);
         }
 
         [Given(@"I have entered an end date in (.*)")]
         public void GivenIHaveEnteredAnEndDateIn(int p0)
         {
-            endDate = DateTime.Today.AddDays(p0);
+            booking.EndDate = DateTime.Today.AddDays(p0);
         }
 
         [When(@"I press Create New Booking")]
         public void WhenIPressCreateNewBooking()
         {
-            roomID = bookingManager.FindAvailableRoom(startDate, endDate);
+            canBook = bookingManager.CreateBooking(booking);
         }
 
         [Then(@"The result should be (.*)")]
-        public void ThenTheResultShouldBe(int expectedReturn)
+        public void ThenTheResultShouldBe(bool expectedReturn)
         {
-            Assert.Equal(expectedReturn, roomID);
+            Assert.Equal(expectedReturn, canBook);
         }
     }
 }
