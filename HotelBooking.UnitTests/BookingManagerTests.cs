@@ -17,7 +17,8 @@ namespace HotelBooking.UnitTests
         private Mock<IRepository<Booking>> bookingRepositoryMock;
         private Mock<IRepository<Room>> roomRepositoryMock;
 
-        public BookingManagerTests(){
+        public BookingManagerTests()
+        {
             DateTime start = DateTime.Today.AddDays(10);
             DateTime end = DateTime.Today.AddDays(20);
             bookingRepository = new FakeBookingRepository(start, end);
@@ -141,7 +142,7 @@ namespace HotelBooking.UnitTests
             int roomId = bookingManager.FindAvailableRoom(startDate, endDate);
 
             // Assert
-           // We expect that -1 will be returned, indicating that no available rooms exist within the specified date range.
+            // We expect that -1 will be returned, indicating that no available rooms exist within the specified date range.
             Assert.Equal(-1, roomId);
         }
 
@@ -224,7 +225,7 @@ namespace HotelBooking.UnitTests
         public void CreateBooking_CallOnce_And_ReturnTrue()
         {
             // Arrange
-            var rooms = new List<Room>{new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" }};
+            var rooms = new List<Room> { new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" } };
             var bookingManager = new BookingManager(bookingRepositoryMock.Object, roomRepositoryMock.Object);
             var booking = new Booking { StartDate = DateTime.Today.AddDays(2), EndDate = DateTime.Now.AddDays(4) };
 
@@ -277,7 +278,7 @@ namespace HotelBooking.UnitTests
                 date => Assert.Equal(DateTime.Today.AddDays(2).Date, date.Date),
                 date => Assert.Equal(DateTime.Today.AddDays(3).Date, date.Date),
                 date => Assert.Equal(DateTime.Today.AddDays(5).Date, date.Date),
-                date => Assert.Equal(DateTime.Today.AddDays(6).Date, date.Date) 
+                date => Assert.Equal(DateTime.Today.AddDays(6).Date, date.Date)
             );
             //it only returns 5 dates even tho it looks like there should be 7, due to how bookings work
             //books don't count the day of the END date, so it's technically only days 1-3 and 5-6
@@ -317,7 +318,7 @@ namespace HotelBooking.UnitTests
             // it's expected based on the code, but seems like a major oversight for the hotel and customers
         }
 
-            [Fact]
+        [Fact]
         public void FindAvailableRoom_RoomAvailable_StartDuringEndAfterFullyBooked2()
         {
             // Arrange
@@ -349,11 +350,11 @@ namespace HotelBooking.UnitTests
             Assert.Equal(-1, roomId);
         }
 
-            [Fact]
+        [Fact]
         public void CreateBooking_CallAddMethodWithCorrectBooking()
         {
             // Arrange
-            var rooms = new List<Room> { new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" }};
+            var rooms = new List<Room> { new Room { Id = 1, Description = "single room" }, new Room { Id = 2, Description = "double room" } };
             var booking = new Booking { StartDate = DateTime.Today.AddDays(2), EndDate = DateTime.Now.AddDays(4) };
 
             // Mock the behavior of roomRepository to return a list of available rooms
@@ -371,6 +372,41 @@ namespace HotelBooking.UnitTests
             Assert.True(result);
         }
 
-    }
+        // Data-Driven Unit Testing with xUnit.net:
 
+   
+        [Theory]
+        [InlineData("2023-11-06", "2023-11-08", 2)] // Valid case: No active bookings
+        [InlineData("2023-11-10", "2023-11-13", -1)] // Valid case: No overlapping bookings
+        [InlineData("2023-11-02", "2023-11-08", typeof(ArgumentException))] // Expecting ArgumentException
+        [InlineData("2023-11-10", "2023-11-09", typeof(ArgumentException))] // Expecting ArgumentException
+        public void FindAvailableRoom_Should_Return_CorrectResult(
+    string startDateStr, string endDateStr, object expected)
+        {
+            // Arrange
+            var startDate = DateTime.Parse(startDateStr);
+            var endDate = DateTime.Parse(endDateStr);
+
+            var occupiedStartedDate = DateTime.Today.AddDays(5);
+            var occupiedEnddate = DateTime.Today.AddDays(10);
+
+            var bookingRepository = new FakeBookingRepository(occupiedStartedDate, occupiedEnddate);
+            var roomRepository = new FakeRoomRepository();
+            var roomManager = new BookingManager(bookingRepository, roomRepository);
+
+            // Act and Assert
+            if (expected is Type exceptionType)
+            {
+                // Expect an exception
+                Assert.Throws(exceptionType, () => roomManager.FindAvailableRoom(startDate, endDate));
+            }
+            else
+            {
+                // Expect a valid result
+                int expectedRoomId = (int)expected;
+                int result = roomManager.FindAvailableRoom(startDate, endDate);
+                Assert.Equal(expectedRoomId, result);
+            }
+        }
+    }
 }

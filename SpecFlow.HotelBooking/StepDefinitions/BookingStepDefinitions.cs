@@ -8,6 +8,8 @@ namespace HotelBooking.Specflow.Booking.StepDefinitions
     [Binding]
     public class BookingStepDefinitions
     {
+
+       
         DateTime startDate, endDate;
         DateTime[] occupiedDates = new DateTime[]
         {
@@ -15,10 +17,9 @@ namespace HotelBooking.Specflow.Booking.StepDefinitions
             new DateTime(2023,11,30),
         };
 
-        IRepository<Booking> bookingRepository;
-        private Mock<IRepository<Booking>> bookingRepositoryMock;
-        private Mock<IRepository<Room>> roomRepositoryMock;
-        private IBookingManager bookingmanager = new BookingManager();
+
+       
+        
 
         private ScenarioContext scenarioContext;
 
