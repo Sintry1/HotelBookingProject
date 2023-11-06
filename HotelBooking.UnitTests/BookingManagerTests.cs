@@ -221,6 +221,8 @@ namespace HotelBooking.UnitTests
 
 
         [Fact]
+        // Moq starts here
+        // Moq allows us to isolate test dependencies by creating mock implementations of them so that we can focus on testing behavour of the code under test without relying on the repos themselves
         public void CreateBooking_CallOnce_And_ReturnTrue()
         {
             // Arrange
@@ -241,6 +243,10 @@ namespace HotelBooking.UnitTests
             bookingRepositoryMock.Verify(repo => repo.Add(booking), Times.Once());
             Assert.True(result);
         }
+
+        // Moq actually makes unit testing more simple, by making things more readable and maintainable
+        // Moq also avoids errors and unintended side effects because it doesn't use the real dependencies
+
 
         [Fact]
         public void GetFullyOccupiedDates_Return5FullyOccupiedDates()
