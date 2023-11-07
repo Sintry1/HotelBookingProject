@@ -15,8 +15,8 @@ Scenario Outline: Create a booking
     Then The result should be <return>
 
     	Examples:
-	| startDate | endDate | return |
-	| 2         | 5       | true      |
+	| startDate | endDate |return   |
+	| 2         | 5       |true     |
 	| 21        | 24      |true     |
 	| 9         | 21      |false    |
 	| 6         | 10      |false    |
